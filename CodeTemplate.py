@@ -1,6 +1,5 @@
 # 文件名:CodeTemplate.py
 # {{%,%}},{%,%}
-# angle bracket/brace
 from functools import reduce
 
 TOKEN_TEXT = 0
@@ -16,10 +15,8 @@ class Token(object):
 
 def IDENT(id, type):
     length = len(id)
-
     def __(text):
         return (text.startswith(id), Token(type, id), length)
-
     return __
 
 LBrace = IDENT("{%", TOKEN_LEFT_BARCE)
@@ -34,7 +31,6 @@ def T_OR(*args):
             if ret[0]:
                 return ret
         return (False, None, 0)
-
     return __
 
 # 顺序有优先级,不能错
@@ -115,7 +111,6 @@ def G_OR(*args):
             if flag:
                 return (True, childNodeList, child_length)
         return (False, None, 0)
-
     return __
 
 # 0或多次匹配,不会匹配失败
@@ -288,6 +283,6 @@ def Template(text):
     tokens = ParseToken(text)
     gs = G2_Code()(G_Code(tokens)[1])[1]
     def __(context):
-        return reduce(lambda a,b:a+b,map(lambda it: it.render(context),gs),'')
+        _text = reduce(lambda a,b:a+b,map(lambda it: it.render(context),gs),'')
+        return reduce(lambda acc,it: acc+it+'\n',filter(lambda it: it.strip(),_text.split('\n')),'')
     return __
-
